@@ -67,8 +67,6 @@ for IP in cisco_routers.read().strip().split():
 		
 		
 		print (get_free_int(intf_desc))
-		
-
 		print
 		
 		
@@ -88,6 +86,6 @@ for IP in cisco_routers.read().strip().split():
 				
 		ssh.sendline('write')
 		ssh.expect('#')
-				#print interface, get_free_int(intf_desc)[interface]
+
 
 
