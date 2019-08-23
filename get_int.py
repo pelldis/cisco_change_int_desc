@@ -47,45 +47,48 @@ def get_free_int(lst):
 	
 	return desc_base
 	
+if __name__ == '__main__':
 
-for IP in cisco_routers.read().strip().split():
-	print ('Connecting to {} ...'.format(IP))
-	with pexpect.spawn('ssh {}@{}'.format(USER, IP)) as ssh:
-		
-		ssh.expect('[Pp]assword:')
-		ssh.sendline('Juniper')
-		
-		ssh.expect('#')
-		
-		# send command for get interface description data
-		ssh.sendline('sh int desc')
-		
-		ssh.expect('#')
-		
-		# splitting string with \n to list
-		intf_desc = ssh.before.split('\n')[2:-1]
-		
-		
-		print (get_free_int(intf_desc))
-		print
-		
-		
-		if len(get_free_int(intf_desc)) > 0:
-			#print ('go working')
-			ssh.sendline('configure terminal')
+	for IP in cisco_routers.read().strip().split():
+		print ('Connecting to {} ...'.format(IP))
+		with pexpect.spawn('ssh {}@{}'.format(USER, IP)) as ssh:
+			
+			ssh.expect('[Pp]assword:')
+			ssh.sendline('Juniper')
+			
 			ssh.expect('#')
-			for interface in get_free_int(intf_desc).keys():
-				ssh.sendline('interface {}'.format(interface))
+			
+			# send command for get interface description data
+			ssh.sendline('sh int desc')
+			
+			ssh.expect('#')
+			
+			# splitting string with \n to list
+			intf_desc = ssh.before.split('\n')[2:-1]
+			
+			
+			print (get_free_int(intf_desc))
+			print
+			
+			
+			if len(get_free_int(intf_desc)) > 0:
+				#print ('go working')
+				ssh.sendline('configure terminal')
 				ssh.expect('#')
-				
-				ssh.sendline('description {}'.format(get_free_int(intf_desc)[interface]))
-				ssh.expect('#')
-				
-		ssh.sendline('end')
-		ssh.expect('#')
-				
-		ssh.sendline('write')
-		ssh.expect('#')
+				for interface in get_free_int(intf_desc).keys():
+					ssh.sendline('interface {}'.format(interface))
+					ssh.expect('#')
+					
+					ssh.sendline('description {}'.format(get_free_int(intf_desc)[interface]))
+					ssh.expect('#')
+					
+			ssh.sendline('end')
+			ssh.expect('#')
+					
+			ssh.sendline('write')
+			ssh.expect('#')
+		
+
 
 
 
